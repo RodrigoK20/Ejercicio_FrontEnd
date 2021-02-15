@@ -111,7 +111,12 @@
           title: 'Municipios',
           to: '/municipios',
         },
-       
+           //Cursos
+         {
+          icon: 'mdi-email',
+          title: 'Cursos',
+          to: '/cursos',
+        },
 
       ],
     }),
