@@ -53,86 +53,29 @@
         
     ></v-text-field>  
 
-<v-dialog
-       ref="dialog"
-        v-model="modal"
-        :return-value.sync="date"
-        persistent
-        width="290px"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-            v-model="date"
-            label="INICIO"
-            prepend-icon="mdi-calendar"
-            readonly
-            v-bind="attrs"
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker
-          v-model="date"
-          scrollable
-        >
-          <v-spacer></v-spacer>
-          <v-btn
-            text
-            color="primary"
-            @click="modal = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            text
-            color="primary"
-            @click="$refs.dialog.save(date)"
-         
-          >
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-dialog>
 
 
-<v-dialog
-        ref="dialog"
-        v-model="modal2"
-        :return-value.sync="date2"
-        persistent
-        width="290px"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-            v-model="date2"
-            label="FIN"
-            prepend-icon="mdi-calendar"
-            readonly
-            v-bind="attrs"
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker
-          v-model="date2"
-          scrollable
-        >
-          <v-spacer></v-spacer>
-          <v-btn
-            text
-            color="primary"
-            @click="modal2 = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            text
-            color="primary"
-            @click="$refs.dialog.save(date2)"
-          >
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-dialog>
 
+        <v-text-field
+         v-model="curso.fecha_inicio_date"
+         label="FECHA INICIO - YYYY-MM-DD"
+         outlined
+        
+    ></v-text-field>  
+
+   <v-text-field
+         v-model="curso.fecha_fin_date"
+         label="FECHA FIN - YYYY-MM-DD"
+         outlined
+        
+    ></v-text-field>  
+
+    <v-text-field
+         v-model="curso.cantidad_evaluaciones"
+         label="Numero evaluaciones #"
+         outlined
+        
+    ></v-text-field> 
 
 
       </v-col>
@@ -140,7 +83,7 @@
       <v-col cols="12" lg="6">
 
   <v-text-field
-         v-model="curso.cantidad_participantes"
+         v-model="curso.numero_participantes"
          label="Cantidad Particpantes"
          outlined
         required
@@ -156,6 +99,13 @@
       <v-text-field
          v-model="curso.orden_compra"
          label="Orden Compra #"
+         outlined
+        
+    ></v-text-field> 
+
+    <v-text-field
+         v-model="curso.compra_bolsa"
+         label="Compra bolsa"
          outlined
         
     ></v-text-field> 
@@ -179,6 +129,13 @@
              <select v-model="curso.tipo_costo_id" id="select2" required>  
                 <option  v-for="tipo in tipo_costos" :value="tipo.id" :key="tipo.id">
                  {{tipo.nombre}}
+            </option>
+        </select>
+
+          <span>Modalid: </span> 
+             <select v-model="curso.modalidad_id" id="select4" required>  
+                <option  v-for="modalidad in modalidades" :value="modalidad.id" :key="modalidad.id">
+                 {{modalidad.nombre}}
             </option>
         </select>
 
@@ -208,6 +165,13 @@
 let url_municipios = 'http://localhost:8000/api/municipios';
 let url_tipo_costos = 'http://localhost:8000/api/tipo_costos';
 let url_instructores = 'http://localhost:8000/api/instructores';
+let url_modalidades = 'http://localhost:8000/api/modalidades';
+let url_store='http://localhost:8000/api/curso/add';
+
+import Vue from 'vue';
+import VueSwal from 'vue-swal';
+
+Vue.use(VueSwal)
 
 export default {
     name: 'CrearCurso',
@@ -215,6 +179,7 @@ export default {
         this.obtenerMunicipios();
         this.obtenerTipoCostos();
         this.obtenerInstructores();
+        this.obtenerModalidades();
     },
 
      data(){
@@ -230,8 +195,9 @@ date2: new Date().toISOString().substr(0, 10),
             municipios:[],
             tipo_costos:[],
             instructores:[],
+            modalidades:[],
             curso:{
-                
+              
             },            
         }
         
@@ -268,20 +234,58 @@ date2: new Date().toISOString().substr(0, 10),
             })
         },
 
+          obtenerModalidades(){
+            this.axios.get(url_modalidades)
+            .then(response=>{
+                this.modalidades = response.data;
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+        },
 
+    
+        guardar(){
+            let router = this.$router;
+            let params = this.curso;
+            this.axios.post(url_store, params)
+            .then(response=>{
+
+
+            //Validacion 
+             if(response.status == 200){
+                 console.log("status 200");
+
+             this.$swal({
+                icon: 'success',
+                title: 'Curso registrado',
+                text: "Guardado en la base de datos",
+                showConfirmButton: false,
+                timer: 1500
+             })
+
+                 router.push('/cursos');
+
+             }
+
+            })  
+
+       .catch((error)=>{
+              console.log(error);
+           
+
+            })
+
+      }
 
 
       }
-    
- 
-    
   }
 </script>
 
 
 <style>
-
-#select1, #select2, #select3{
+#select1, #select2, #select3, #select4{
 display: block;
   font-size: 16px;
   font-family: 'Verdana', sans-serif;
