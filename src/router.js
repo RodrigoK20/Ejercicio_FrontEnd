@@ -55,6 +55,21 @@ export default new Router({
           component: () => import('@/views/municipios/EditarMunicipio'),
         },
 
+        //Listar Cursos
+        {
+          name: 'ListarCursos',
+          path: '/cursos',
+          component: () => import('@/views/cursos/ListarCursos'),
+        },
+
+         //Agregar Cursos
+         {
+          name: 'CrearCurso',
+          path: '/cursos/crear',
+          component: () => import('@/views/cursos/AgregarCurso'),
+        },
+       
+
         // Dashboard
         {
           name: 'Dashboard',
