@@ -77,6 +77,60 @@
         
     ></v-text-field> 
 
+<span>Calendario</span>
+    <v-text-field
+        v-model="curso.fecha"
+         label="FECHA"
+         outlined
+        
+    ></v-text-field> 
+
+    <v-text-field
+         v-model="curso.hora_inicio"
+         label="HORA INICIO "
+         outlined
+        
+    ></v-text-field> 
+
+     <v-text-field
+       v-model="curso.hora_fin"
+         label="HORA FIN "
+         outlined
+        
+    ></v-text-field> 
+
+
+                <v-btn
+                  color="blue darken-1"
+                  @click="addItem()"
+                >
+                  Aregar Horario
+                </v-btn>
+
+            <br> <br> <br> <hr>
+
+           <v-simple-table id="detalles" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora_Inicio</th>
+                    <th>Hora_Fin</th>
+                   
+                </tr>
+            </thead>
+      
+            <tbody>
+
+        <tr v-for="item in rowData" :key="item.fecha">
+            <th scope="row">{{ item.fecha }}</th>
+            <td>{{ item.hora_inicio }}</td>
+            <td>{{ item.hora_fin }}</td>
+        </tr>
+
+            </tbody>
+        </v-simple-table>
+   
+
 
       </v-col>
 
@@ -132,7 +186,7 @@
             </option>
         </select>
 
-          <span>Modalid: </span> 
+          <span>Modalidad: </span> 
              <select v-model="curso.modalidad_id" id="select4" required>  
                 <option  v-for="modalidad in modalidades" :value="modalidad.id" :key="modalidad.id">
                  {{modalidad.nombre}}
@@ -192,12 +246,18 @@ date2: new Date().toISOString().substr(0, 10),
       modal2: false,
       menu2: false,
 
+         
+
             municipios:[],
             tipo_costos:[],
             instructores:[],
             modalidades:[],
+            rowData:[],
             curso:{
-              
+               
+                    fecha:'',
+                    hora_inicio:'',
+                    hora_fin:''
             },            
         }
         
@@ -276,12 +336,26 @@ date2: new Date().toISOString().substr(0, 10),
 
             })
 
-      }
+      },
 
+addItem(){
+      var my_object = {
+        fecha:this.curso.fecha,
+        hora_inicio:this.curso.hora_inicio,
+        hora_fin:this.curso.hora_fin,
+      };
+      this.rowData.push(my_object);
+
+      //this.curso.datos.fecha = '';
+     // this.curso.datos.hora_inicio = '';
+      //this.curso.datos.hora_fin = '';
+    },
+  
 
       }
   }
 </script>
+
 
 
 <style>
